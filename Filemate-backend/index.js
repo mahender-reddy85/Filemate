@@ -99,7 +99,15 @@ setInterval(() => {
     }
 }, 60 * 60 * 1000);
 
-app.listen(3001, () => {
-  console.log('✅ Filemate backend is running on http://localhost:3001');
+app.listen(PORT, () => {
+  console.log(`✅ Filemate backend is running on port ${PORT}`);
 });
 
+
+app.get('/', (req, res) => {
+  res.send('✅ Filemate backend is running');
+});
+
+app.use(cors({
+  origin: '*', // For development. Later replace with Vercel domain for safety.
+}));
