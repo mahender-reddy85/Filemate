@@ -341,10 +341,6 @@ class FileTransferApp {
     }
 }
 
-if (typeof app === 'undefined') {
-    const app = new FileTransferApp();
-}
-
 // Add drag-over class for styling
 const style = document.createElement('style');
 style.textContent = `
@@ -368,3 +364,5 @@ style.textContent = `
     }
 `;
 document.head.appendChild(style);
+
+window.app = new FileTransferApp();
