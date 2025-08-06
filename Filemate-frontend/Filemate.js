@@ -273,19 +273,15 @@ class FileTransferApp {
 
     async downloadFiles() {
         const code = document.getElementById('downloadCode').value.toUpperCase();
-        if (code.length !== 6) {
-            alert('Please enter a valid 6-digit code');
-            return;
-        }
 
         // Adjusted for 4-digit code
         if (code.length !== 4) {
             alert('Please enter a valid 4-digit code');
             return;
         }
-        try {
-            const response = await fetch('https://filemate-backend.onrender.com/api/upload');
 
+        try {
+            const response = await fetch(`https://filemate-backend.onrender.com/api/download/${code}`);
             if (!response.ok) {
                 throw new Error('Invalid code or files have expired');
             }
@@ -296,54 +292,56 @@ class FileTransferApp {
         } catch (error) {
             alert(error.message);
         }
-
-
-        displayReceivedFiles(files, code) {
-            const receivedFiles = document.getElementById('receivedFiles');
-            receivedFiles.innerHTML = '';
-
-            files.forEach(file => {
-                const fileExtension = file.originalname.split('.').pop().toLowerCase();
-                const fileIcon = this.getFileIcon(fileExtension);
-
-                const fileItem = document.createElement('div');
-                fileItem.className = 'file-item';
-
-                fileItem.innerHTML = `
-                <div class="file-info">
-                    <i class="fas ${fileIcon} file-icon ${fileExtension}"></i>
-                    <div class="file-details">
-                        <h4>${file.originalname}</h4>
-                        <p>${this.formatFileSize(file.size)}</p>
-                    </div>
-                </div>
-                <button class="btn-primary" onclick="app.downloadSingleFile('${code}', '${file.filename}', '${file.originalname}')">
-                    <i class="fas fa-download"></i>
-                </button>
-            `;
-
-                receivedFiles.appendChild(fileItem);
-            });
-        }
-
-        downloadSingleFile(code, filename, originalname) {
-            const url = `http://localhost:3001/api/download/${code}/${filename}`;
-            const link = document.createElement('a');
-            link.href = url;
-            link.download = originalname;
-            link.style.display = 'none';
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-        }
-
-        downloadAllFiles() {
-            // In a real app, this would download all files as a zip
-            alert('Downloading all files...');
-        }
     }
 
-    if(typeof app === 'undefined') {
+    // ✅ Move this OUTSIDE of downloadFiles()
+    displayReceivedFiles(files, code) {
+        const receivedFiles = document.getElementById('receivedFiles');
+        receivedFiles.innerHTML = '';
+
+        files.forEach(file => {
+            const fileExtension = file.originalname.split('.').pop().toLowerCase();
+            const fileIcon = this.getFileIcon(fileExtension);
+
+            const fileItem = document.createElement('div');
+            fileItem.className = 'file-item';
+
+            fileItem.innerHTML = `
+            <div class="file-info">
+                <i class="fas ${fileIcon} file-icon ${fileExtension}"></i>
+                <div class="file-details">
+                    <h4>${file.originalname}</h4>
+                    <p>${this.formatFileSize(file.size)}</p>
+                </div>
+            </div>
+            <button class="btn-primary" onclick="app.downloadSingleFile('${code}', '${file.filename}', '${file.originalname}')">
+                <i class="fas fa-download"></i>
+            </button>
+        `;
+
+            receivedFiles.appendChild(fileItem);
+        });
+    }
+
+    downloadSingleFile(code, filename, originalname) {
+        const url = `https://filemate-backend.onrender.com/api/download/${code}/${filename}`;
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = originalname;
+        link.style.display = 'none';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    }
+
+
+    downloadAllFiles() {
+        // In a real app, this would download all files as a zip
+        alert('Downloading all files...');
+    }
+}
+
+if (typeof app === 'undefined') {
     const app = new FileTransferApp();
 }
 
