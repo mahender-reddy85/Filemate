@@ -33,6 +33,7 @@ const upload = multer({ storage });
 
 // ✅ In-memory storage for files grouped by code
 const fileGroups = {};
+const CryptoJS = require('crypto-js');
 
 // ✅ Upload endpoint
 app.post('/api/upload', upload.array('files'), (req, res) => {
