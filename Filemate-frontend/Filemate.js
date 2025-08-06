@@ -204,7 +204,8 @@ class FileTransferApp {
 
         // Create actual QR code
         const qrCode = new QRCode(qrCodeContainer, {
-            text: `https://filemate.vercel.app/download/${code}`            width: 150,
+            text: `https://filemate.vercel.app/download/${code}`,
+            width: 150,
             height: 150,
             colorDark: "#000000",
             colorLight: "#ffffff",
