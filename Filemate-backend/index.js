@@ -47,7 +47,7 @@ app.post('/api/upload', upload.array('files'), (req, res) => {
 
   fileGroups[code] = {
     files,
-    expiry: Date.now() + 24 * 60 * 60 * 1000 // 24 hours
+    expiry: Date.now() + 60 * 60 * 1000 // 1 hour
   };
 
   res.json({ code });
@@ -116,4 +116,18 @@ app.get('/', (req, res) => {
 // ✅ Start the server
 app.listen(PORT, () => {
   console.log(`✅ Filemate backend is running on port ${PORT}`);
+});
+
+app.get('/api/download/:code', (req, res) => {
+  const code = req.params.code.toUpperCase();
+  const group = fileGroups[code];
+
+  if (!group) return res.status(404).json({ error: 'Code not found' });
+
+  if (Date.now() > group.expiry) {
+    delete fileGroups[code];
+    return res.status(410).json({ error: 'Files expired' });
+  }
+
+  res.json({ files: group.files });
 });
