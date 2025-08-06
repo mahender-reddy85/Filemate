@@ -15,7 +15,7 @@ class FileTransferApp {
         // File input
         const fileInput = document.getElementById('fileInput');
         const uploadArea = document.getElementById('uploadArea');
-        
+
         fileInput.addEventListener('change', (e) => this.handleFileSelect(e));
         uploadArea.addEventListener('click', () => fileInput.click());
 
@@ -79,7 +79,7 @@ class FileTransferApp {
     displayFiles() {
         const fileList = document.getElementById('fileList');
         const fileItems = document.getElementById('fileItems');
-        
+
         if (this.files.length === 0) {
             fileList.style.display = 'none';
             return;
@@ -91,10 +91,10 @@ class FileTransferApp {
         this.files.forEach((file, index) => {
             const fileItem = document.createElement('div');
             fileItem.className = 'file-item';
-            
+
             const fileExtension = file.name.split('.').pop().toLowerCase();
             const fileIcon = this.getFileIcon(fileExtension);
-            
+
             fileItem.innerHTML = `
                 <div class="file-info">
                     <i class="fas ${fileIcon} file-icon ${fileExtension}"></i>
@@ -107,7 +107,7 @@ class FileTransferApp {
                     <i class="fas fa-times"></i>
                 </button>
             `;
-            
+
             fileItems.appendChild(fileItem);
         });
     }
@@ -159,7 +159,7 @@ class FileTransferApp {
         });
 
         try {
-            const response = await fetch('http://localhost:3001/api/upload', {
+            const response = await fetch('https://filemate-backend.onrender.com/api/upload', {
                 method: 'POST',
                 body: formData
             });
@@ -198,10 +198,10 @@ class FileTransferApp {
 
     generateQRCode(code) {
         const qrCodeContainer = document.getElementById('qrCode');
-        
+
         // Clear any existing QR code
         qrCodeContainer.innerHTML = '';
-        
+
         // Create actual QR code
         const qrCode = new QRCode(qrCodeContainer, {
             text: `https://quickshare.example.com/download/${code}`,
@@ -211,7 +211,7 @@ class FileTransferApp {
             colorLight: "#ffffff",
             correctLevel: QRCode.CorrectLevel.H
         });
-        
+
         // Add click handler for QR code
         qrCodeContainer.style.cursor = 'pointer';
         qrCodeContainer.title = 'Click to download';
@@ -227,7 +227,7 @@ class FileTransferApp {
             })),
             expiry: Date.now() + (24 * 60 * 60 * 1000) // 24 hours
         };
-        
+
         // Store in localStorage (for demo)
         localStorage.setItem(`files_${code}`, JSON.stringify(fileData));
     }
@@ -246,12 +246,12 @@ class FileTransferApp {
 
     showTab(tab) {
         this.currentTab = tab;
-        
+
         // Update tab buttons
         document.querySelectorAll('.tab-btn').forEach(btn => {
             btn.classList.toggle('active', btn.dataset.tab === tab);
         });
-        
+
         // Show appropriate section
         if (tab === 'send') {
             this.showSection('uploadSection');
@@ -265,7 +265,7 @@ class FileTransferApp {
         sections.forEach(id => {
             document.getElementById(id).style.display = id === sectionId ? 'block' : 'none';
         });
-        
+
         if (sectionId === 'uploadSection') {
             document.getElementById('uploadSection').classList.add('fade-in');
         }
@@ -283,32 +283,33 @@ class FileTransferApp {
             alert('Please enter a valid 4-digit code');
             return;
         }
-
         try {
-            const response = await fetch(`http://localhost:3001/api/info/${code}`);
+            const response = await fetch('https://filemate-backend.onrender.com/api/upload');
+
             if (!response.ok) {
                 throw new Error('Invalid code or files have expired');
             }
+
             const data = await response.json();
             this.displayReceivedFiles(data.files, code);
             this.showSection('receivedSection');
         } catch (error) {
             alert(error.message);
         }
-    }
 
-    displayReceivedFiles(files, code) {
-        const receivedFiles = document.getElementById('receivedFiles');
-        receivedFiles.innerHTML = '';
 
-        files.forEach(file => {
-            const fileExtension = file.originalname.split('.').pop().toLowerCase();
-            const fileIcon = this.getFileIcon(fileExtension);
+        displayReceivedFiles(files, code) {
+            const receivedFiles = document.getElementById('receivedFiles');
+            receivedFiles.innerHTML = '';
 
-            const fileItem = document.createElement('div');
-            fileItem.className = 'file-item';
+            files.forEach(file => {
+                const fileExtension = file.originalname.split('.').pop().toLowerCase();
+                const fileIcon = this.getFileIcon(fileExtension);
 
-            fileItem.innerHTML = `
+                const fileItem = document.createElement('div');
+                fileItem.className = 'file-item';
+
+                fileItem.innerHTML = `
                 <div class="file-info">
                     <i class="fas ${fileIcon} file-icon ${fileExtension}"></i>
                     <div class="file-details">
@@ -321,28 +322,28 @@ class FileTransferApp {
                 </button>
             `;
 
-            receivedFiles.appendChild(fileItem);
-        });
+                receivedFiles.appendChild(fileItem);
+            });
+        }
+
+        downloadSingleFile(code, filename, originalname) {
+            const url = `http://localhost:3001/api/download/${code}/${filename}`;
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = originalname;
+            link.style.display = 'none';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        downloadAllFiles() {
+            // In a real app, this would download all files as a zip
+            alert('Downloading all files...');
+        }
     }
 
-    downloadSingleFile(code, filename, originalname) {
-        const url = `http://localhost:3001/api/download/${code}/${filename}`;
-        const link = document.createElement('a');
-        link.href = url;
-        link.download = originalname;
-        link.style.display = 'none';
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-    }
-
-    downloadAllFiles() {
-        // In a real app, this would download all files as a zip
-        alert('Downloading all files...');
-    }
-}
-
-if (typeof app === 'undefined') {
+    if(typeof app === 'undefined') {
     const app = new FileTransferApp();
 }
 
