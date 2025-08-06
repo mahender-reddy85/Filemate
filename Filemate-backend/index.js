@@ -67,6 +67,7 @@ app.get('/api/info/:code', (req, res) => {
 
   res.json({
     files: group.files.map(f => ({
+      filename: f.filename,          // ✅ Needed for download
       originalname: f.originalname,
       size: f.size,
       mimetype: f.mimetype
