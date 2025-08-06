@@ -29,6 +29,30 @@
                 <div class="file-list" id="fileList" style="display: none;">
                     <h3>Selected Files</h3>
                     <div id="fileItems"></div>
+                    
+                    <!-- New Features -->
+                    <div class="upload-options">
+                        <div class="option-group">
+                            <label for="passwordInput">
+                                <i class="fas fa-lock"></i> Password Protection (Optional)
+                            </label>
+                            <input type="password" id="passwordInput" placeholder="Set password for files">
+                        </div>
+                        
+                        <div class="option-group">
+                            <label for="downloadLimit">
+                                <i class="fas fa-download"></i> Download Limit
+                            </label>
+                            <select id="downloadLimit">
+                                <option value="0">Unlimited</option>
+                                <option value="1">1 download</option>
+                                <option value="3" selected>3 downloads</option>
+                                <option value="5">5 downloads</option>
+                                <option value="10">10 downloads</option>
+                            </select>
+                        </div>
+                    </div>
+                    
                     <button class="btn-primary" id="uploadBtn">
                         <i class="fas fa-upload"></i> Upload & Share
                     </button>
