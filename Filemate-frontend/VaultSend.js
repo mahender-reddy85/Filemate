@@ -159,7 +159,7 @@ class FileTransferApp {
         });
 
         try {
-            const response = await fetch('https://filemate-backend.onrender.com/api/upload', {
+            const response = await fetch('https://VaultSend-backend.onrender.com/api/upload', {
                 method: 'POST',
                 body: formData
             });
@@ -204,7 +204,7 @@ class FileTransferApp {
 
         // Create actual QR code
         const qrCode = new QRCode(qrCodeContainer, {
-            text: `https://filemate.vercel.app/download/${code}`,
+            text: `https://VaultSend.vercel.app/download/${code}`,
             width: 150,
             height: 150,
             colorDark: "#000000",
@@ -281,7 +281,7 @@ class FileTransferApp {
         }
 
         try {
-            const response = await fetch(`https://filemate-backend.onrender.com/api/download/${code}`);
+            const response = await fetch(`https://VaultSend-backend.onrender.com/api/download/${code}`);
             if (!response.ok) {
                 throw new Error('Invalid code or files have expired');
             }
@@ -324,7 +324,7 @@ class FileTransferApp {
     }
 
     downloadSingleFile(code, filename, originalname) {
-        const url = `https://filemate-backend.onrender.com/api/download/${code}/${filename}`;
+        const url = `https://VaultSend-backend.onrender.com/api/download/${code}/${filename}`;
         const link = document.createElement('a');
         link.href = url;
         link.download = originalname;
