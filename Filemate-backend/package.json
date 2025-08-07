@@ -1,7 +1,7 @@
 {
-  "name": "filemate-backend",
+  "name": "VaultSend-backend",
   "version": "1.0.0",
-  "description": "Backend for Filemate app",
+  "description": "Backend for VaultSend app",
   "main": "index.js",
   "scripts": {
     "start": "node index.js"

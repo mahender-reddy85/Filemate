@@ -10,7 +10,7 @@ const PORT = process.env.PORT || 3001;
 
 // ✅ Apply CORS correctly at the top
 app.use(cors({
-  origin: '*', // Later replace with your frontend domain like 'https://filemate.vercel.app'
+  origin: '*', // Later replace with your frontend domain like 'https://VaultSend.vercel.app'
 }));
 
 app.use(express.json());
@@ -112,12 +112,12 @@ setInterval(() => {
 
 // ✅ Health check route
 app.get('/', (req, res) => {
-  res.send('✅ Filemate backend is running');
+  res.send('✅ VaultSend backend is running');
 });
 
 // ✅ Start the server
 app.listen(PORT, () => {
-  console.log(`✅ Filemate backend is running on port ${PORT}`);
+  console.log(`✅ VaultSend backend is running on port ${PORT}`);
 });
 
 app.get('/api/download/:code', (req, res) => {
