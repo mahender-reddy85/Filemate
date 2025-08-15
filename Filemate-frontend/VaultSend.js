@@ -324,7 +324,7 @@ class FileTransferApp {
     }
 
     downloadSingleFile(code, filename, originalname) {
-        const url = `https://VaultSend-backend.onrender.com/api/download/${code}/${filename}`;
+        const url = `https://filemate.onrender.com/api/download/${code}/${filename}`;
         const link = document.createElement('a');
         link.href = url;
         link.download = originalname;
